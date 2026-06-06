@@ -1,0 +1,6 @@
+#!/Users/ranpin/.real/users/user-f54574ae8993d5cc8424155672744118/workspace/projects/world/repo-sync/scraper/.venv/bin/python3
+import sys
+from dotenv.__main__ import cli
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(cli())
