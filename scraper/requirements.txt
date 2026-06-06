@@ -1,4 +1,18 @@
-playwright>=1.40.0
-httpx>=0.25.0
-pydantic>=2.0.0
-python-dotenv>=1.0.0
+# 彩蛋地图采集系统依赖
+# 核心引擎：MediaCrawler
+git+https://github.com/NanmiCoder/MediaCrawler.git@main#egg=MediaCrawler
+
+# 数据处理
+pyyaml>=6.0
+pandas>=2.0
+
+# AI分类（可选）
+dashscope>=1.14.0
+openai>=1.0.0
+
+# 地理编码
+requests>=2.31.0
+
+# 工具
+loguru>=0.7.0
+tenacity>=8.2.0

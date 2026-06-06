@@ -1,0 +1,51 @@
+# 彩蛋地图采集配置
+
+# 搜索关键词（按平台分组）
+search_keywords:
+  xhs:
+    - "旅行彩蛋"
+    - "景点藏宝"
+    - "课本接头计划"
+    - "城市寻宝"
+    - "旅途惊喜"
+    - "藏在景区的书"
+    - "国家地理杂志 旅行"
+    - "三山五岳 打卡"
+    - "古镇 宝藏"
+    - "小众秘境 发现"
+  douyin:
+    - "旅行彩蛋"
+    - "景点隐藏惊喜"
+    - "城市寻宝"
+    - "课本接头"
+    - "宝藏景点"
+    - "旅途中的书"
+    - "景区彩蛋"
+
+# 采集控制
+crawl:
+  max_notes_per_keyword: 20      # 每个关键词最大采集笔记数
+  request_delay_min: 3           # 最小请求间隔(秒)
+  request_delay_max: 8           # 最大请求间隔(秒)
+  max_concurrent: 1              # 并发数(建议1，避免触发风控)
+  cookie_refresh_hours: 24       # Cookie刷新周期(小时)
+
+# 输出配置
+output:
+  dir: "./output"
+  format: "json"                 # json / csv
+  include_images: true           # 是否下载预览图
+  image_dir: "./output/images"
+
+# AI分类配置（可选，需要API Key）
+ai_classify:
+  enabled: false
+  provider: "dashscope"          # dashscope / openai
+  model: "qwen-plus"
+  api_key_env: "DASHSCOPE_API_KEY"  # 从环境变量读取
+
+# 地理编码配置
+geocoding:
+  provider: "amap"               # amap(高德)
+  api_key_env: "AMAP_API_KEY"    # 从环境变量读取
+  fallback: "nominatim"          # API不可用时降级到OpenStreetMap
