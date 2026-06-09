@@ -24,7 +24,7 @@ echo "📦 安装基础依赖..."
 echo "🌐 安装 Playwright Chromium..."
 "$VENV/bin/playwright" install chromium
 
-# 4. 克隆并安装 MediaCrawler（绕过 build isolation）
+# 4. 克隆 MediaCrawler（仅克隆源码，不用 pip 安装，彻底绕过 pyproject.toml 兼容性问题）
 if [ ! -d "$MC_SRC/.git" ]; then
     echo "📥 克隆 MediaCrawler..."
     git clone --depth 1 https://github.com/NanmiCoder/MediaCrawler.git "$MC_SRC"
@@ -32,9 +32,11 @@ else
     echo "✅ MediaCrawler 已存在，跳过克隆"
 fi
 
-echo "📦 安装 MediaCrawler（--no-build-isolation）..."
-"$VENV/bin/pip" install "setuptools<75" -q
-"$VENV/bin/pip" install --no-build-isolation -e "$MC_SRC" -q
+# 5. 安装 MediaCrawler 自身的依赖（直接读它的 requirements.txt，不走 pip install -e .）
+echo "📦 安装 MediaCrawler 运行依赖..."
+if [ -f "$MC_SRC/requirements.txt" ]; then
+    "$VENV/bin/pip" install -r "$MC_SRC/requirements.txt" -q
+fi
 
 echo ""
 echo "✅ 环境搭建完成！"
