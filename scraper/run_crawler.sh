@@ -41,11 +41,48 @@ export MEDIAMCRAWLER_ENABLE_GET_MEIDAS="True"
 
 cd "$MC_SRC"
 
-echo "⚠️  即将打开浏览器，请扫码登录小红书..."
+# 自动启动 Chrome（带远程调试端口），供 MediaCrawler CDP 模式连接
+CHROME_PATH=""
+if [ -d "/Applications/Google Chrome.app" ]; then
+    CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+elif [ -d "/Applications/Microsoft Edge.app" ]; then
+    CHROME_PATH="/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge"
+fi
+
+CDP_PORT=9222
+
+if [ -n "$CHROME_PATH" ]; then
+    echo "🌐 启动浏览器（远程调试端口 $CDP_PORT）..."
+    # 使用独立用户数据目录，避免影响正常浏览器
+    USER_DATA_DIR="$SCRIPT_DIR/.chrome_debug_profile"
+    mkdir -p "$USER_DATA_DIR"
+    "$CHROME_PATH" \
+        --remote-debugging-port=$CDP_PORT \
+        --user-data-dir="$USER_DATA_DIR" \
+        --no-first-run \
+        --no-default-browser-check \
+        --disable-blink-features=AutomationControlled \
+        "about:blank" &>/dev/null &
+    CHROME_PID=$!
+    echo "   Chrome PID: $CHROME_PID"
+    sleep 2
+else
+    echo "⚠️  未检测到 Chrome/Edge，请手动启动浏览器并开启远程调试："
+    echo "   /path/to/chrome --remote-debugging-port=$CDP_PORT"
+fi
+
+echo ""
+echo "⚠️  即将打开小红书登录页，请扫码登录..."
 echo "   登录后Cookie会自动保存，下次无需重复登录"
 echo ""
 
 "$VENV/bin/python" main.py --platform "$PLATFORM" --lt qrcode --type search
+
+# 采集完成后关闭调试浏览器
+if [ -n "$CHROME_PID" ]; then
+    echo "🔒 关闭调试浏览器..."
+    kill "$CHROME_PID" 2>/dev/null || true
+fi
 
 echo ""
 echo "✅ 采集完成！数据保存在: $SCRIPT_DIR/output/"
