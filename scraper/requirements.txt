@@ -1,6 +1,6 @@
 # 彩蛋地图采集系统依赖
-# 核心引擎：MediaCrawler
-git+https://github.com/NanmiCoder/MediaCrawler.git@main#egg=MediaCrawler
+# ⚠️ MediaCrawler 不通过 pip 安装（上游 pyproject.toml 与新版 setuptools 不兼容）
+# 请运行 setup_env.sh 一键完成环境搭建
 
 # 数据处理
 pyyaml>=6.0
@@ -16,3 +16,6 @@ requests>=2.31.0
 # 工具
 loguru>=0.7.0
 tenacity>=8.2.0
+
+# Playwright（浏览器自动化）
+playwright>=1.40.0
